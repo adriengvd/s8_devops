@@ -60,7 +60,7 @@ jobs:
         context: ./database
         # Note: tags has to be all lower-case
         tags: ${{secrets.DOCKERHUB_USERNAME}}/tp-devops-cpe:database
-        push: ${{github.ref == 'refs/heads/main}}
+        push: ${{github.ref == 'refs/heads/main'}}
 
     - name: Build image and push httpd
     # DO the same for httpd
@@ -70,4 +70,4 @@ jobs:
         context: ./http
         # Note: tags has to be all lower-case
         tags: ${{secrets.DOCKERHUB_USERNAME}}/tp-devops-cpe:http-server
-        push: ${{github.ref == 'refs/heads/main}}
+        push: ${{github.ref == 'refs/heads/main'}}
