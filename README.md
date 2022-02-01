@@ -151,6 +151,8 @@ docker run --name simple-api-main --net network_tp01 adriengvd/simple-api-main
 docker run -p 80:80 --net network_tp01 -d http_server
 ```
 
+On accède au serveur à travers `localhost:80`
+
 ## Avec docker compose
 **docker-compose.yml:**
 ```Dockerfile 
