@@ -29,8 +29,8 @@ docker run -p 5432:5432 -v /home/agervrau/s8_devops/database/data:/var/lib/postg
 
 # 1-2 Backend API
 
-Dockerfile app java première étape : 
-
+## Appli java    
+**Dockerfile java avec pré-compilation:**
 ```Dockerfile
 FROM openjdk:11-jre
 COPY . /usr/src/myapp
@@ -39,7 +39,7 @@ WORKDIR /usr/src/myapp
 CMD ["java", "Main"]
 ```
 
-App java deuxième étape:
+**Dockerfile java sans pré-compilation:**
 ```Dockerfile
 FROM openjdk:11
 COPY . /usr/src/myapp
@@ -51,10 +51,11 @@ COPY --from=0 /usr/src/myapp/Main.class .
 CMD ["java", "Main"]
 ```
 
-Simple API:
+## Simple API:
 
 On utilise un multistage build afin de créer des images de plus petite taille. 
 
+**Dockerfile Simple API:**
 ```Dockerfile
 # Build
 FROM maven:3.6.3-jdk-11 AS myapp-build
@@ -76,7 +77,7 @@ COPY --from=myapp-build $MYAPP_HOME/target/*.jar $MYAPP_HOME/myapp.jar
 ENTRYPOINT java -jar myapp.jar
 ```
 
-Simple Api avec base de données :
+**Dockerfile Simple Api avec base de données :**
 
 ```Dockerfile
 # Build
@@ -96,7 +97,7 @@ COPY --from=myapp-build $MYAPP_HOME/target/*.jar $MYAPP_HOME/myapp.jar
 ENTRYPOINT java -jar myapp.jar
 ```
 
-Appliction.yaml ->
+**application.yaml:**
 
 ```yaml
 spring:
@@ -123,8 +124,9 @@ management:
 
 ```
 
-Commandes pour run les conatainers -> 
+**Commandes des containers:**
 ```docker
+docker network create network_tp01
 docker build -t adriengvd/simple-api-main .
 docker run -p 8080:8080 --net network_tp01 adriengvd/simple-api-main
 docker run -p 5432:5432 -v /home/agervrau/s8_devops/database/data:/var/lib/postgresql/data --net network_tp01 --name postgresdb -d adriengvd/postgres_db
@@ -133,4 +135,81 @@ docker run -p 5432:5432 -v /home/agervrau/s8_devops/database/data:/var/lib/postg
 # 1-3 Http Server
 
 
+**Dockerfile serveur http:** 
+```Dockerfile 
+FROM httpd:2.4
+COPY ./index.html /usr/local/apache2/htdocs/
+COPY ./httpd.conf /usr/local/apache2/conf/
+```
 
+On utilise un reverse proxy afin d'avoir un seul point d'accès à  plusieurs applications potentielles, de choisir celles qui sont exposées, et de sécuriser ce point d'accès.  
+
+**Commandes docker:**
+```docker
+docker run --name simple-api-main --net network_tp01 adriengvd/simple-api-main
+
+docker run -p 80:80 --net network_tp01 -d http_server
+```
+
+## Avec docker compose
+**docker-compose.yml:**
+```Dockerfile 
+version: '3.7'
+services:
+  backend:
+    build: java/simple-api-with-db/
+    container_name: simple-api-with-db
+    networks:
+      - network_tp01
+    depends_on:
+      - database
+
+  database:
+    build: database/
+    container_name: postgresdb
+    networks:
+      - network_tp01
+    volumes:
+      - ./database/data:/var/lib/postgresql/data
+    
+  httpd:
+    build: http/
+    ports:
+      - '80:80'
+    networks:
+      - network_tp01
+    depends_on:
+      - backend
+networks:
+  network_tp01:
+```
+**Commandes docker-compose :**
+
+```docker
+# Build les images utilisées
+docker-compose build 
+# Lancer le docker-compose en détaché
+docker-compose up -d 
+# Arreter et supprimer les dockers lancés par le docker-compose
+docker-compose down
+# Voir les logs de tous les containers
+docker-compose logs
+```
+
+
+## Publishing
+
+
+```docker
+docker login
+# Tagging versions & naming
+docker tag s8_devops_database adriengvd/s8_devops_database:1.0
+docker tag s8_devops_backend adriengvd/s8_devops_backend:1.0
+docker tag s8_devops_httpd adriengvd/s8_devops_httpd:1.0
+# Pushing to dockerhub
+docker push adriengvd/s8_devops_database:1.0
+docker push adriengvd/s8_devops_backend:1.0
+docker push adriengvd/s8_devops_httpd:1.0
+```
+
+Mettre nos images docker en ligne nous permet d'avoir une sauvegarde en plus de les récupérer facilement depuis une autre machine, et de les partager à d'autres utilisateurs.
