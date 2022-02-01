@@ -29,7 +29,7 @@ jobs:
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify sonar:sonar -Dsonar.projectKey=dc599d03-0619-4425-bd4c-8753a5a8c7c7 -Dsonar.organization=3cc2c7a5-d688-481a-9f31-945ae33a35cc -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} --file ./java/simple-api-with-db/pom.xml
+        run: mvn -B verify sonar:sonar -Dsonar.projectKey=adriengvd_s8_devops -Dsonar.organization=adriengvd -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} --file ./java/simple-api-with-db/pom.xml
 
   # define job to build and publish docker image
   build-and-push-docker-image:
