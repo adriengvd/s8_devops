@@ -38,7 +38,7 @@ jobs:
 On déclare les variables `DOCKERHUB_USERNAME`, `DOCKERHUB_PASSWORD` et `DOCKERHUB_TOKEN` dans la partie secrets de GitHub.
 
 
-La ligne `needs: test-backend` permet de s'assurer que le job test-backend s'est bien exécuté avant de passer à la prochaine étape. Ainsi, on garantit que l'on push des images seulement si elles sont valides.
+La ligne `needs: test-backend` permet de s'assurer que le job test-backend s'est bien exécuté avant de passer à la prochaine étape. Ainsi, on garantit que les deux jobs ne s'exécutent pas en même temps est que l'on push des images seulement si elles sont valides.
 
 On push les images Docker afin de pouvoir les récupérer, étant donné qu'elles sont générées lors du push.
 

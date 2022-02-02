@@ -32,4 +32,4 @@ jobs:
       #   run: mvn -B verify sonar:sonar -Dsonar.projectKey=adriengvd_s8_devops -Dsonar.organization=adriengvd -Dsonar.host.url=https://sonarcloud.io --file ./java/simple-api-with-db/pom.xml
 
       - name: Call build_and_push_image workflow  
-        uses: ./.github/workflows/test_backend.yml@main
+        uses: adriengvd/s8_devops/.github/workflows/test_backend.yml@main
