@@ -4,6 +4,7 @@
   docker_container:
     name: http_server
     image: "adriengvd/tp-devops-cpe:http-server"
+    pull: true
     networks:
       - name: "network_tp3"
     ports:

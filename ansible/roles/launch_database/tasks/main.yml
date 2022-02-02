@@ -5,6 +5,7 @@
   docker_container:
     name: "postgresdb"
     image: "adriengvd/tp-devops-cpe:database"
+    pull: true
     networks:
       - name: "network_tp3"
     volumes:

@@ -4,5 +4,6 @@
   docker_container:
     name: simple-api-with-db
     image: "adriengvd/tp-devops-cpe:simple-api"
+    pull: true
     networks:
       - name: "network_tp3"
