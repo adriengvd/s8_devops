@@ -1,10 +1,8 @@
 ---
-# tasks file for roles/launch_app
-
-- name: Create a data container
+# tasks file for roles/launch_proxy
+- name: Create proxy container and connect to network
   docker_container:
-    name: mydata
-    image: busybox
-    volumes:
-      - /data
-      
+    name: simple-api-with-db
+    image: "adriengvd/tp-devops-cpe:simple-api"
+    networks:
+      - name: "network_tp3"

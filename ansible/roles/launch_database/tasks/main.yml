@@ -1,2 +1,11 @@
 ---
 # tasks file for roles/launch_database
+
+- name: Create db container and connect to network
+  docker_container:
+    name: "postgresdb"
+    image: "adriengvd/tp-devops-cpe:database"
+    networks:
+      - name: "network_tp3"
+    volumes:
+        - ./database/data
