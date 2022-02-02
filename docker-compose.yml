@@ -1,8 +1,16 @@
 version: '3.7'
 services:
-  backend:
+  simple-api-1:
     build: java/simple-api-with-db/
-    container_name: simple-api-with-db
+    container_name: simple-api-1
+    networks:
+      - network_tp01
+    depends_on:
+      - database
+
+  simple-api-2:
+    build: java/simple-api-with-db/
+    container_name: simple-api-2
     networks:
       - network_tp01
     depends_on:
