@@ -32,10 +32,9 @@ jobs:
       env:
         SSH_KEY: ${{ secrets.SSH_KEY }}
       run: |
-        echo $PWD
-        mkdir /home/centos/.ssh
-        echo "$SSH_KEY" > /home/centos/.ssh/id_rsa
-        chmod 600 /home/centos/.ssh/id_rsa
+        mkdir .ssh
+        echo "$SSH_KEY" > .ssh/id_rsa
+        chmod 600 .ssh/id_rsa
         
     - name: run exporters playbook
       run: |
