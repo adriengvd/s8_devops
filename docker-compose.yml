@@ -25,5 +25,13 @@ services:
       - network_tp01
     depends_on:
       - backend
+      - front
+
+  front:
+    build: front/
+    container_name: front
+    networks:
+      - network_tp01
+
 networks:
   network_tp01:

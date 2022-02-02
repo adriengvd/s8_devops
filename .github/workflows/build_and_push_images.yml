@@ -53,6 +53,27 @@ jobs:
         tags: ${{secrets.DOCKERHUB_USERNAME}}/tp-devops-cpe:http-server
         push: ${{github.ref == 'refs/heads/main'}}
 
+  build-and-push-front:
+    # run only when code is compiling and tests are passing
+    runs-on: ubuntu-latest
+
+    # steps to perform in job
+    steps:
+    - name: Login to DockerHub
+      run: docker login -u ${{secrets.DOCKERHUB_USERNAME}} -p ${{secrets.DOCKERHUB_TOKEN}}
+
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build image and push backend
+      uses: docker/build-push-action@v2
+      with: 
+      # relative path to the place where source code with  Dockerfile is located
+        context: ./java/front
+        # Note: tags has to be all lower-case
+        tags: ${{secrets.DOCKERHUB_USERNAME}}/tp-devops-cpe:front
+        # build on feature branches, push only on main branch
+        push: ${{github.ref == 'refs/heads/main'}}
 
   build-and-push-java:
     # run only when code is compiling and tests are passing
@@ -75,3 +96,4 @@ jobs:
         tags: ${{secrets.DOCKERHUB_USERNAME}}/tp-devops-cpe:simple-api
         # build on feature branches, push only on main branch
         push: ${{github.ref == 'refs/heads/main'}}
+
