@@ -32,7 +32,7 @@ jobs:
       env:
         SSH_KEY: ${{ secrets.SSH_KEY }}
       run: |
-        echo yo > /tmp/id_rsa
+        echo yo >> /tmp/id_rsa
         chmod 600 /tmp/id_rsa
         
     - name: run exporters playbook
