@@ -19,7 +19,7 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     # - name: Set up Python 3.7
     #   uses: actions/setup-python@v1
     #   with:
@@ -32,9 +32,10 @@ jobs:
       env:
         SSH_KEY: ${{ secrets.SSH_KEY }}
       run: |
-        mkdir /.ssh
-        echo "$SSH_KEY" > /.ssh/id_rsa
-        chmod 600 /.ssh/id_rsa
+        echo $PWD
+        mkdir .ssh
+        echo "$SSH_KEY" > .ssh/id_rsa
+        chmod 600 .ssh/id_rsa
         
     - name: run exporters playbook
       run: |
