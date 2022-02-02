@@ -1,0 +1,9 @@
+---
+# tasks file for roles/launch_front
+- name: Create front container and connect to network
+  docker_container:
+    name: front
+    image: "adriengvd/tp-devops-cpe:front"
+    pull: true
+    networks:
+      - name: "network_tp3"

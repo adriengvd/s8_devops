@@ -36,3 +36,8 @@
   service: name=docker state=started
   tags: docker
 
+- name: Add centos user to docker groups
+  user:
+    name: centos
+    groups: docker
+    append: yes
