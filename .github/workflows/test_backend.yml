@@ -34,4 +34,4 @@ jobs:
       - name: Call build_and_push_image workflow  
         env: 
           working-directory: ./.github/workflows
-        uses: test_backend.yml
+        uses: ./test_backend.yml
