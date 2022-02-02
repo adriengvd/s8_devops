@@ -1,3 +1,11 @@
+# TP2
+
+## First steps into the CI world  
+
+
+
+**Main.yml:**
+```yml
 name: CI devops 2022 CPE
 on:
   #to begin you want to launch this job in main and develop
@@ -20,17 +28,48 @@ jobs:
         with:
           distribution: 'adopt' # See 'Supported distributions' for available options
           java-version: '11'
-          cache: 'maven'
+
+      - name: Build and test with Maven
+        run: mvn clean verify --file ./java/simple-api-with-db/pom.xml 
+```
+
+## First steps into the CD world  
+
+On déclare les variables `DOCKERHUB_USERNAME`, `DOCKERHUB_PASSWORD` et `DOCKERHUB_TOKEN` dans la partie secrets de GitHub.
+
+
+La ligne `needs: test-backend` permet de s'assurer que le job test-backend s'est bien exécuté avant de passer à la prochaine étape. Ainsi, on garantit que l'on push des images seulement si elles sont valides.
+
+On push les images Docker afin de pouvoir les récupérer, étant donné qu'elles sont générées lors du push.
+
+**main.yml**
+```yml
+name: CI devops 2022 CPE
+on:
+  #to begin you want to launch this job in main and develop
+  push:
+    branches: 
+      - main
+      - develop
+  pull_request:
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-18.04
+    steps:
+      #checkout your github code using actions/checkout@v2.3.3
+      - uses: actions/checkout@v2.3.3
+      
+      #do the same with another action (actions/setup-java@v2) that enable to setup jdk 11
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt' # See 'Supported distributions' for available options
+          java-version: '11'
 
       #finally build your app with the latest command
-      # - name: Build and test with Maven
-      #   run: mvn clean verify --file ./java/simple-api-with-db/pom.xml 
-
-      - name: Analyse with sonar
-        env: 
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify sonar:sonar -Dsonar.projectKey=adriengvd_s8_devops -Dsonar.organization=adriengvd -Dsonar.host.url=https://sonarcloud.io --file ./java/simple-api-with-db/pom.xml
+      - name: Build and test with Maven
+        run: mvn clean verify --file ./java/simple-api-with-db/pom.xml 
 
   # define job to build and publish docker image
   build-and-push-docker-image:
@@ -77,3 +116,21 @@ jobs:
         # Note: tags has to be all lower-case
         tags: ${{secrets.DOCKERHUB_USERNAME}}/tp-devops-cpe:http-server
         push: ${{github.ref == 'refs/heads/main'}}
+```
+
+## Setup Quality Gate
+
+Pour rajouter l'analyse avec Sonar, après s'être créé un compte et avoir rajouté SONAR_TOKEN aux secrets GitHub, on replace les lignes suivantes:
+
+```yml
+- name: Build and test with Maven
+run: mvn clean verify --file ./java/simple-api-with-db/pom.xml 
+```
+par celles-ci:
+```yml
+- name: Analyse with sonar
+env: 
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+run: mvn -B verify sonar:sonar -Dsonar.projectKey=adriengvd_s8_devops -Dsonar.organization=adriengvd -Dsonar.host.url=https://sonarcloud.io --file ./java/simple-api-with-db/pom.xml
+```
