@@ -96,15 +96,3 @@ jobs:
         tags: ${{secrets.DOCKERHUB_USERNAME}}/tp-devops-cpe:simple-api
         # build on feature branches, push only on main branch
         push: ${{github.ref == 'refs/heads/main'}}
-
- 
-  # call-workflow:
-  #   needs: 
-  #     - build-and-push-java
-  #     - build-and-push-http
-  #     - build-and-push-database
-  #     - build-and-push-front
-
-  #   uses: adriengvd/s8_devops/.github/workflows/deploy.yml@main 
-  #   secrets:
-  #     SSH_KEY: ${{secrets.SSH_KEY}}
