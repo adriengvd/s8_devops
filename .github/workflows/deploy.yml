@@ -32,8 +32,8 @@ jobs:
       env:
         SSH_KEY: ${{ secrets.SSH_KEY }}
       run: |
-        echo "$SSH_KEY" > /tmp/.ssh/id_rsa
-        chmod 600 /tmp/.ssh/id_rsa
+        echo "$SSH_KEY" > /tmp/
+        chmod 600 /tmp/
         
     - name: run exporters playbook
       run: |
