@@ -32,5 +32,8 @@ jobs:
       #   run: mvn -B verify sonar:sonar -Dsonar.projectKey=adriengvd_s8_devops -Dsonar.organization=adriengvd -Dsonar.host.url=https://sonarcloud.io --file ./java/simple-api-with-db/pom.xml
   call-workflow:
     needs: test-backend
-    uses: adriengvd/s8_devops/.github/workflows/build_and_push_images.yml@main
+    uses: adriengvd/s8_devops/.github/workflows/build_and_push_images.yml@main 
+    secrets:
+      DOCKERHUB_USERNAME: ${{secrets.DOCKERHUB_USERNAME}}
+      DOCKERHUB_TOKEN: ${{secrets.DOCKERHUB_TOKEN}}
 

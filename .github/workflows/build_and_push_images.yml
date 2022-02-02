@@ -2,6 +2,11 @@ name: Build and push images
 on:
   #the job is launched from the test_backend workflow
   workflow_call:
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: true
+      DOCKERHUB_TOKEN:
+        required: true
     
 jobs:
   build-and-push-database:
