@@ -38,4 +38,4 @@ jobs:
         
     - name: run exporters playbook
       run: |
-        ansible-playbook -i ansible/inventories/setup.yml playbook.yml
+        ansible-playbook -i ./ansible/inventories/setup.yml ./ansible/playbook.yml
