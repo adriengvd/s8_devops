@@ -4,6 +4,5 @@
   docker_container:
     name: front
     image: "adriengvd/tp-devops-cpe:front"
-    pull: true
     networks:
       - name: "network_tp3"
