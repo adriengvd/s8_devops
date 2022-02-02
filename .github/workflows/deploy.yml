@@ -1,14 +1,18 @@
 name: Run ansible playbook
-on:
-  #the job is launched from the build_and_push_images workflow
-  workflow_call:
-    secrets:
-      DOCKERHUB_USERNAME:
-        required: true
-      DOCKERHUB_TOKEN:
-        required: true
-      SSH_KEY:
-        required: true
+# on:
+#   #the job is launched from the build_and_push_images workflow
+#   workflow_call:
+#     secrets:
+#       DOCKERHUB_USERNAME:
+#         required: true
+#       DOCKERHUB_TOKEN:
+#         required: true
+#       SSH_KEY:
+#         required: true
+
+on: 
+  push:
+    branches: ['main', 'develop']
 
 jobs:
   run-playbook:
@@ -26,11 +30,12 @@ jobs:
         pip install ansible==2.9.2 requests
     - name: set ansible config secrets
       env:
-        ANSIBLE_VAULT_PASSWORD: ${{ secrets.SSH_KEY }}
+        SSH_KEY: ${{ secrets.SSH_KEY }}
       run: |
         mkdir .ssh
         echo "$SSH_KEY" > .ssh/id_rsa
+        chmod 600 .ssh/id_rsa
         
     - name: run exporters playbook
       run: |
-        ansible-playbook -i inventory playbook.yml
+        ansible-playbook -i ansible/inventories/setup.yml playbook.yml

@@ -100,13 +100,13 @@ jobs:
         push: ${{github.ref == 'refs/heads/main'}}
 
  
-  call-workflow:
-    needs: 
-      - build-and-push-java
-      - build-and-push-http
-      - build-and-push-database
-      - build-and-push-front
+  # call-workflow:
+  #   needs: 
+  #     - build-and-push-java
+  #     - build-and-push-http
+  #     - build-and-push-database
+  #     - build-and-push-front
 
-    uses: adriengvd/s8_devops/.github/workflows/deploy.yml@main 
-    secrets:
-      SSH_KEY: ${{secrets.SSH_KEY}}
+  #   uses: adriengvd/s8_devops/.github/workflows/deploy.yml@main 
+  #   secrets:
+  #     SSH_KEY: ${{secrets.SSH_KEY}}
