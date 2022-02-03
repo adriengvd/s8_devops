@@ -2,16 +2,16 @@
 # tasks file for roles/launch_proxy
 - name: Create app container and connect to network
   docker_container:
-    name: simple-api-1
+    name: simple-api-with-db
     image: "adriengvd/tp-devops-cpe:simple-api"
     networks:
       - name: "network_tp3"
       
-- name: Create app container and connect to network
-  docker_container:
-    name: simple-api-2
-    image: "adriengvd/tp-devops-cpe:simple-api"
-    networks:
-      - name: "network_tp3"
+# - name: Create app container and connect to network
+#   docker_container:
+#     name: simple-api-2
+#     image: "adriengvd/tp-devops-cpe:simple-api"
+#     networks:
+#       - name: "network_tp3"
     
       
