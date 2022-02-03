@@ -81,7 +81,7 @@ ain.yml`, et on appelle le role docker dans le playbook.
 On créé les 5 roles avec les `tasks/main.yml` correspondants.
 Le role install_docker a juste été renommé, on utilise le même fichier qu'au dessus.
 
-**create_network.yml:**
+**create_network/tasks/main.yml:**
 ```yml
 ---
 # tasks file for roles/launch_proxy
@@ -93,7 +93,7 @@ Le role install_docker a juste été renommé, on utilise le même fichier qu'au
       - name: "network_tp3"
 ```
 
-**launch_database.yml:**
+**launch_database/tasks/.yml:**
 ```yml
 ---
 # tasks file for roles/launch_database
@@ -108,7 +108,7 @@ Le role install_docker a juste été renommé, on utilise le même fichier qu'au
         - ./database/data
 ```
 
-**launch_app.yml:**
+**launch_app/tasks/main.yml:**
 ```yml
 ---
 # tasks file for roles/launch_proxy
@@ -120,7 +120,7 @@ Le role install_docker a juste été renommé, on utilise le même fichier qu'au
       - name: "network_tp3"
 ```
 
-**launch_proxy.yml:**
+**launch_proxy/tasks/main.yml:**
 ```yml
 ---
 # tasks file for roles/launch_proxy
@@ -148,4 +148,28 @@ On appelle ensuite tous ces rôles dans le bon ordre dans le fichier `playbook.y
     - launch_database
     - launch_app
     - launch_proxy
+```
+
+
+## Front
+
+Pour ajouter le front à notre serveur, il faut d'abord mettre à jout notre workflow `build_and_push_images`, pour y rajouter l'image du front, que l'on pourra `pull` depuis le serveur.
+rajouter un rôle launch_front:
+
+**launch_front/tasks/main.yml:**
+```yml
+---
+# tasks file for roles/launch_front
+- name: Create front container and connect to network
+  docker_container:
+    name: front
+    image: "adriengvd/tp-devops-cpe:front"
+    networks:
+      - name: "network_tp3"
+```
+
+Il ne faut pas oublier de l'ajouter à notre `playbook.yml` :
+```yml
+( ... )
+    - launch_front
 ```
