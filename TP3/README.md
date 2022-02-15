@@ -173,3 +173,61 @@ Il ne faut pas oublier de l'ajouter à notre `playbook.yml` :
 ( ... )
     - launch_front
 ```
+
+
+## Continuous deployment 
+
+
+On créée un nouveau workflow `deploy.yml` avec le contenu suivant:
+```yml
+name: Run ansible playbook
+on:
+  #the job is launched from the build_and_push_images workflow
+  workflow_call:
+    secrets:
+      SSH_KEY:
+        required: true
+
+jobs:
+  run-playbook:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Run playbook
+      uses: dawidd6/action-ansible-playbook@v2
+      with:
+        # Required, playbook filepath
+        playbook: ./ansible/playbook.yml
+        # Optional, SSH private key
+        key: ${{secrets.SSH_KEY}}
+        # Optional, literal inventory file contents
+        inventory: |
+          all:
+            vars:
+              ansible_user: centos
+            children:
+              prod:
+                hosts: 
+                  adrien.gervraud.takima.cloud:
+```
+
+Ce workflow est appelé depuis test_backend.yml. On le modifie pour appeler `build_and_push_images` et `deploy.yml` de la manière suivante:
+
+```yml
+  call-build-and-push-images:
+    needs: test-backend
+    uses: adriengvd/s8_devops/.github/workflows/build_and_push_images.yml@main 
+    secrets:
+      DOCKERHUB_USERNAME: ${{secrets.DOCKERHUB_USERNAME}}
+      DOCKERHUB_TOKEN: ${{secrets.DOCKERHUB_TOKEN}}
+
+  call-deploy:
+    needs: call-build-and-push-images
+    uses: adriengvd/s8_devops/.github/workflows/deploy.yml@main 
+    secrets:
+      SSH_KEY: ${{secrets.SSH_KEY}}
+ ```
+
+Il faut bien penser à rajouter SSH_KEY à nos secrets GitHub.
