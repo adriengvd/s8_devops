@@ -14,10 +14,6 @@ all:
         adrien.gervraud.takima.cloud:
 ```
 
-Commands used
-```ansible
-```
-
 ## Playbooks
 
 On déplace les tasks du `playbook.yml` vers `tasks/m
